@@ -18,7 +18,7 @@ class PentabarfKit {
             print("❌ Failed to fetch schedule")
             return nil
         }
-        
+
         guard let event = DataParser.parse(data) else {
             print("❌ Failed to parse schedule")
             return nil

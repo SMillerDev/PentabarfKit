@@ -18,7 +18,6 @@ final class PentabarfKitTests: XCTestCase {
         XCTAssertEqual(event?.city, "Brussels")
     }
 
-
     func test2023() async throws {
         let path = Bundle.module.path(forResource: "schedule_2023", ofType: "xml")
         let event = try await PentabarfKit.loadConference(URL(fileURLWithPath: path!))

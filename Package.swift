@@ -27,7 +27,7 @@ let package = Package(
             name: "PentabarfKitTests",
             dependencies: ["PentabarfKit"],
             resources: [
-                .process("TestResources"),
+                .process("TestResources")
             ]
         )
     ]
