@@ -8,7 +8,7 @@
 import Foundation
 
 class PentabarfKit {
-    static func loadConference(_ url: URL) async throws -> Conference? {
+    public static func loadConference(_ url: URL) async throws -> Conference? {
         print("📲 Getting schedule: \(url)")
         let urlRequest = URLRequest(url: url)
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
