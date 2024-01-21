@@ -1,5 +1,5 @@
 //
-//  PentabarfKit.swift
+//  PentabarfLoader.swift
 //  
 //
 //  Created by Sean Molenaar on 07/01/2024.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-public class PentabarfKit {
-    public static func loadConference(_ url: URL) async throws -> Conference? {
+public class PentabarfLoader {
+    public static func fetchConference(_ url: URL) async throws -> Conference? {
         print("📲 Getting schedule: \(url)")
         let urlRequest = URLRequest(url: url)
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
