@@ -17,7 +17,6 @@ extension Room: Hashable {
         return lhs.name == rhs.name
     }
 
-
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }

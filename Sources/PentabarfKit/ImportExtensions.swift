@@ -118,7 +118,7 @@ enum EventParsingError: Error {
 extension Event {
     private static let errorMessage: String = "ERROR"
 
-    private static var tracks: [String:Track] = [:]
+    private static var tracks: [String: Track] = [:]
 
     static func from(_ element: XML.Element, date: Date) throws -> Self {
         let language = ImportHelper.filterElementByName(element, name: "language") ?? "en"

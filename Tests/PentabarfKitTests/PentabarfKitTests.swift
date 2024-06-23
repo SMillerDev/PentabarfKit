@@ -54,12 +54,14 @@ final class PentabarfKitTests: XCTestCase {
         var conference = try await PentabarfLoader.fetchConference(URL(fileURLWithPath: path!))
 
         XCTAssertNotNil(conference)
-        
+
         let event = conference?.events.first { !$0.attachments.isEmpty }
         XCTAssertNotNil(event)
 
         let attachment = event!.attachments.first
+        // swiftlint:disable:next line_length
         XCTAssertEqual(attachment?.title, "Making a community-managed FOSS project sustainable in the medium- to long-term")
+        // swiftlint:disable:next line_length
         XCTAssertEqual(attachment?.url.absoluteString, "https://fosdem.org/2022/schedule/event/community_sustainable/attachments/audio/5230/export/events/attachments/community_sustainable/audio/5230/makingacommunitymanagedfossprojectsustainable.pdf")
         XCTAssertEqual(attachment?.type, "audio")
     }
