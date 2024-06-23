@@ -43,7 +43,7 @@ struct ImportHelper {
             return nil
         }
 
-        return intervalTime.distance(to: beginTime!)
+        return beginTime!.distance(to: intervalTime)
     }
 }
 
@@ -81,7 +81,7 @@ extension Track {
             metadata[attribute.key] = attribute.value
         }
 
-        return Self.init(name: element.text!, metadata: metadata)
+        return Self.init(name: element.text!)
     }
 }
 
@@ -103,16 +103,24 @@ extension Room {
     static func from(_ element: XML.Element, date: Date) -> Self {
         var events: [Event] = []
         element.childElements.forEach { eventElement in
-            events.append(Event.from(eventElement, date: date))
+            if let event = try? Event.from(eventElement, date: date) {
+                events.append(event)
+            }
         }
         return Self.init(name: element.attributes["name"]!, events: events)
     }
 }
 
+enum EventParsingError: Error {
+    case missingElement(String)
+}
+
 extension Event {
     private static let errorMessage: String = "ERROR"
 
-    static func from(_ element: XML.Element, date: Date) -> Self {
+    private static var tracks: [String:Track] = [:]
+
+    static func from(_ element: XML.Element, date: Date) throws -> Self {
         let language = ImportHelper.filterElementByName(element, name: "language") ?? "en"
         let locale = Locale(languageComponents: .init(identifier: language))
         var authors: [Person] = []
@@ -130,6 +138,16 @@ extension Event {
         element.childElements.filter { $0.name == "attachments" }.first?.childElements.forEach { attachmentElement in
             attachments.append(Attachment.from(attachmentElement))
         }
+
+        guard let trackString = ImportHelper.filterElementByName(element, name: "track") else {
+            throw EventParsingError.missingElement("No Track specified!")
+        }
+
+        if tracks.keys.contains(trackString) == false {
+            let track = Track(name: trackString)
+            tracks[trackString] = track
+        }
+
         return Self.init(id: Int(element.attributes["id"]!)!,
                          start: ImportHelper.timeFromElementByName(element, name: "start", date: date)!,
                          duration: ImportHelper.intervalFromElementByName(element, name: "duration")!,
@@ -137,11 +155,11 @@ extension Event {
                          slug: ImportHelper.filterElementByName(element, name: "slug") ?? Self.errorMessage,
                          title: ImportHelper.filterElementByName(element, name: "title") ?? Self.errorMessage,
                          subtitle: ImportHelper.filterElementByName(element, name: "subtitle"),
-                         track: ImportHelper.filterElementByName(element, name: "track") ?? Self.errorMessage,
                          type: ImportHelper.filterElementByName(element, name: "type") ?? Self.errorMessage,
                          language: locale,
                          abstract: ImportHelper.filterElementByName(element, name: "abstract") ?? Self.errorMessage,
                          description: ImportHelper.filterElementByName(element, name: "description") ?? "",
+                         track: tracks[trackString]!,
                          authors: authors,
                          attachments: attachments,
                          links: links)

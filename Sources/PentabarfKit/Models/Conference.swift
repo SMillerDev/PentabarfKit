@@ -8,8 +8,6 @@
 import Foundation
 
 public struct Conference {
-    static let elementname: String = "conference"
-
     public let title: String
     public let subtitle: String?
 
@@ -22,6 +20,31 @@ public struct Conference {
     public let dayChange: String
     public let timeslotDuration: TimeInterval
 
-    public var tracks: [Track] = []
     public var days: [ConferenceDay] = []
+
+    public lazy var events: [Event] = {
+        days.flatMap { dayL in
+            var day = dayL
+            return day.events
+        }
+    }()
+
+    public lazy var rooms: [Room] = {
+        Array(Set(days.flatMap { dayL in
+            var day = dayL
+            return day.rooms
+        }))
+    }()
+
+    public lazy var tracks: [Track] = {
+        Array(Set(events.map { event -> Track in
+            return event.track
+        }))
+    }()
+
+    public lazy var authors: [Person] = {
+        Array(Set(events.flatMap { event -> [Person] in
+            return event.authors
+        }))
+    }()
 }

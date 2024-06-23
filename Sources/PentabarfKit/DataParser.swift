@@ -15,13 +15,9 @@ struct DataParser {
 
         data.element?.childElements.first?.childElements.forEach { element in
             switch element.name {
-            case Conference.elementname:
+            case "conference":
                 conference = Conference.from(element)
-            case Track.elementname:
-                element.childElements.forEach { trackElement in
-                    conference?.tracks.append(Track.from(trackElement))
-                }
-            case ConferenceDay.elementname:
+            case "day":
                 conference?.days.append(ConferenceDay.from(element))
             default:
                 break

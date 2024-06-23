@@ -15,11 +15,11 @@ public struct Event {
     public let slug: String
     public let title: String
     public let subtitle: String?
-    public let track: String
     public let type: String
     public let language: Locale
     public let abstract: String
     public let description: String
+    public let track: Track
     public let authors: [Person]
     public let attachments: [Attachment]
     public let links: [Link]
